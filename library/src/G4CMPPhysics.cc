@@ -17,6 +17,7 @@
 #include "G4CMPSecondaryProduction.hh"
 #include "G4CMPTimeStepper.hh"
 #include "G4CMPLukeScattering.hh"
+#include "G4CMPDriftRecombinationProcess.hh"
 #include "G4ParticleTable.hh"
 #include "G4PhononDownconversion.hh"
 #include "G4PhononLong.hh"
@@ -47,6 +48,7 @@ void G4CMPPhysics::ConstructProcess() {
   G4VProcess* driftB  = new G4CMPDriftBoundaryProcess;
   G4VProcess* ivScat  = new G4CMPInterValleyScattering;
   G4VProcess* luke    = new G4CMPLukeScattering(tmStep);
+  G4VProcess* recomb  = new G4CMPDriftRecombinationProcess;
 
   // Set process verbosity to match physics list, for diagnostics
   phScat->SetVerboseLevel(verboseLevel);
@@ -56,6 +58,7 @@ void G4CMPPhysics::ConstructProcess() {
   driftB->SetVerboseLevel(verboseLevel);
   ivScat->SetVerboseLevel(verboseLevel);
   luke->SetVerboseLevel(verboseLevel);
+  recomb->SetVerboseLevel(verboseLevel);
 
   G4ParticleDefinition* particle = 0;	// Reusable buffer for convenience
 
@@ -80,11 +83,13 @@ void G4CMPPhysics::ConstructProcess() {
   RegisterProcess(luke, particle);
   RegisterProcess(ivScat, particle);
   RegisterProcess(driftB, particle);
+  RegisterProcess(recomb, particle);
 
   particle = G4CMPDriftHole::Definition();
   RegisterProcess(tmStep, particle);
   RegisterProcess(luke, particle);
   RegisterProcess(driftB, particle);
+  RegisterProcess(recomb, particle);
 
   AddSecondaryProduction();
 }
